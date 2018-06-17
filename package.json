@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/outplays/data-scraper#readme",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
     "scrape-it": "^5.0.5"
   }
 }

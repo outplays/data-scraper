@@ -1,12 +1,14 @@
-const cheerio = require('cheerio');
+const fs = require('fs');
 
-module.exports = async function (htmlContent){
-    if(typeof htmlContent !== 'string') {
-        throw new TypeError('Parse error: htmlContent not of type string');
-    }
+async function parse(){
+    // console.log(dataObj.awayStats.title);  
 
-
-    const $ = cheerio.load(htmlContent);
-
-    console.log($.html());
+    fs.readFile('./data.json','utf-8', function(err, data){
+        if(err) throw err;
+        var dataObject = JSON.parse(data);
+        console.log(dataObject.awayStats.title);
+    });
+    //var dataObject = JSON.parse(fs.readFileSync('./data.json','utf8'));
+    
 }
+module.exports = parse;
