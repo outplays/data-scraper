@@ -1,0 +1,110 @@
+{
+    "season": "2017",
+    "1":[
+        {
+            "gameId": "400951566",
+            "date": "2017-09-07",
+            "dayOfWeek": "Thu",
+            "away": "KC",
+            "home": "NE"
+        },
+        {
+            "gameId": "400951567",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "NYJ",
+            "away": "BUF"
+        },
+        {
+            "gameId": "400951570",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "ATL",
+            "away": "CHI"
+        },
+        {
+            "gameId": "400951572",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "BAL",
+            "away": "CIN"
+        },
+        {
+            "gameId": "400951574",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "PIT",
+            "away": "CLE"
+        },
+        {
+            "gameId": "400951576",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "ARI",
+            "away": "DET"
+        },
+        {
+            "gameId": "400951584",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "OAK",
+            "away": "TEN"
+        },
+        {
+            "gameId": "400951592",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "PHI",
+            "away": "WAS"
+        },
+        {
+            "gameId": "400951580",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "JAX",
+            "away": "HOU"
+        },
+        {
+            "gameId": "400951597",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "IND",
+            "away": "LAR"
+        },
+        {
+            "gameId": "400951601",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "SEA",
+            "away": "GB"
+        },
+        {
+            "gameId": "400951605",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "CAR",
+            "away": "SF"
+        },
+        {
+            "gameId": "400951608",
+            "date": "2017-09-10",
+            "dayOfWeek": "Sun",
+            "home": "NYG",
+            "away": "DAL"
+        },
+        {
+            "gameId": "400951612",
+            "date": "2017-09-11",
+            "dayOfWeek": "Mon",
+            "home": "NO",
+            "away": "MIN"
+        },
+        {
+            "gameId": "400951615",
+            "date": "2017-09-11",
+            "dayOfWeek": "Mon",
+            "home": "LAC",
+            "away": "DEN"
+        }
+    ]
+}
