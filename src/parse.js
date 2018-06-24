@@ -1,17 +1,61 @@
-const fs = require('fs');
+const pg = require('pg');
+const login = require('../utils/postgresql.js');
+const conString = ''.concat('postgres://',login.username,':',login.password,'@',login.hostname,':',login.port,'/',login.database);
+const client = new pg.Client(conString);
+client.connect();
+
 const TEAMS = require('../utils/teamEnums.js');
 
 function parse(data){
     let players = {};
 
-    let awayTeam = getTeamNameFromStat(data.awayStats[0].title);
-    data.awayStats.forEach(function (stat){
-        let delimited = stat.title.split(' ');
-        let category = delimited[0]
-    });
+    
+    
+    //console.log(data.awayStats);
+    storeGameStatsByTeam(data.awayStats);
+
+
+
+    // client.query('SELECT * FROM passing').then((data)=>{
+    //     console.log(data.rows);
+    // });
+
+    // let awayTeam = getTeamNameFromStat(data.awayStats[0].title);
+    //     data.awayStats.forEach(function (stat){
+    //     let delimited = stat.title.split(' ');
+    //     let category = delimited[0]
+    // });
     
 
 }
+
+function storeGameStatsByTeam(gameStats){
+    gameStats.forEach(function (playType){
+        if(playType.title.endsWith('Passing')){
+            playType.players.forEach(function (player){
+                storePlayerData(player);
+            })
+        }
+        else{
+            return;
+        }
+    });
+}
+
+function storePlayerData(player){
+    if(player.name === null || player.name === 'TEAM'){
+        return;
+    }
+    var generatedStr = ''.concat('INSERT INTO passing (name) VALUES (\'',player.name,'\');' );
+    console.log(generatedStr);
+    client.query(generatedStr).then((pgResponse)=>{
+        console.log('FINISHED STORING! - ', pgResponse);
+        client.query('SELECT * FROM passing').then((data)=>{
+            console.log(data.rows);
+        });
+    })
+}
+
 
 
 //Statistic should be "Passing"
