@@ -6,6 +6,18 @@ client.connect();
 
 const TEAMS = require('../utils/teamEnums.js');
 
+/*CREATE TABLE passing (
+    name        varchar(256) NOT NULL, 
+    catt       varchar(10) NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    td          smallint NOT NULL,
+    int         smallint NOT NULL,
+    sacks       varchar(10) NOT NULL,
+    qbr         real NOT NULL,
+    rtg         real NOT NULL
+);*/
+
 function parse(data){
     let players = {};
 
@@ -33,7 +45,7 @@ function storeGameStatsByTeam(gameStats){
     gameStats.forEach(function (playType){
         if(playType.title.endsWith('Passing')){
             playType.players.forEach(function (player){
-                storePlayerData(player);
+                storePlayerData(player, playType.title);
             })
         }
         else{
@@ -42,21 +54,58 @@ function storeGameStatsByTeam(gameStats){
     });
 }
 
-function storePlayerData(player){
+function storePlayerData(player, statName){
     if(player.name === null || player.name === 'TEAM'){
         return;
     }
-    var generatedStr = ''.concat('INSERT INTO passing (name) VALUES (\'',player.name,'\');' );
+    let tableName = getStatFromTeamStat(statName)
+    let generatedStr = generateInsertQuery(player, tableName);
     console.log(generatedStr);
+    //var generatedStr = ''.concat('INSERT INTO passing (name) VALUES (\'',player.name,'\');' );
     client.query(generatedStr).then((pgResponse)=>{
-        console.log('FINISHED STORING! - ', pgResponse);
         client.query('SELECT * FROM passing').then((data)=>{
-            console.log(data.rows);
         });
-    })
+    });
 }
 
+/*
+ * Given a scraped player object, will return INSERT query string for Postgres table
+ */
+function generateInsertQuery(player, tableName){ 
+    let baseStr = 'INSERT INTO '.concat(tableName);
+    var statNames = 'name';
+    var statValues = '\''+player.name+'\'';
+    player.stats.forEach(function (stat){
+        if(stat.key !== 'name'){
+            if(statNames === ''){
+                statNames = statNames.concat(removeCharFromString('-', stat.key));
+                statValues = statValues.concat(stat.value);
+            }
+            else{ 
+                statNames = statNames.concat(', ', removeCharFromString('-', stat.key));
+                statValues = statValues.concat(', ', stat.value);
+            }
+        }
+    });
+    return baseStr.concat(' (', statNames, ') VALUES (', statValues, ');');
+}
 
+function removeCharFromString(ch, str){
+    return str.replace(ch,'');
+}
+
+function getStatFromTeamStat(statTitle){
+    var statString = '';
+    let words = statTitle.split(' ');
+    console.log(words);
+    if(words[words.length-1]==="Returns"){
+        statString = words[words.length-2].concat(' ', words[words.length-1]);
+    }
+    else{
+        statString = words[words.length-1];
+    }
+    return statString.toLowerCase();
+}
 
 //Statistic should be "Passing"
 function getTeamNameFromStat(statTitle){
