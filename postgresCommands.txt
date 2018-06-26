@@ -1,0 +1,106 @@
+CREATE TABLE passing (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    comp        smallint NOT NULL,
+    att         smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    td          smallint NOT NULL,
+    int         smallint NOT NULL,
+    sacks       smallint NOT NULL,
+    slost       smallint NOT NULL,
+    qbr         real NOT NULL,
+    rtg         real NOT NULL
+);
+
+CREATE TABLE rushing (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    car         smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    td          smallint NOT NULL,
+    long        smallint NOT NULL
+);
+
+CREATE TABLE receiving (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    rec         smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    td          smallint NOT NULL,
+    long        smallint NOT NULL,
+    tgts        smallint NOT NULL
+);
+
+CREATE TABLE fumbles (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    fum         smallint NOT NULL,
+    lost        smallint NOT NULL,
+    rec         smallint NOT NULL
+);
+
+CREATE TABLE defense (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    tot         smallint NOT NULL,
+    solo        smallint NOT NULL,
+    sacks       smallint NOT NULL,
+    tfl         real NOT NULL,
+    pd          smallint NOT NULL,
+    qbhits      smallint NOT NULL,
+    td          smallint NOT NULL
+);
+
+CREATE TABLE interceptions (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    int         smallint NOT NULL,
+    yds         smallint NOT NULL,
+    td          smallint NOT NULL
+);
+
+CREATE TABLE kickreturns (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    no          smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    long        smallint NOT NULL,
+    td          smallint NOT NULL
+);
+
+CREATE TABLE puntreturns (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    no          smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    long        smallint NOT NULL,
+    td          smallint NOT NULL
+);
+
+CREATE TABLE kicking (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    fgm         smallint NOT NULL,
+    fga         smallint NOT NULL,
+    pct         real NOT NULL,
+    long        smallint NOT NULL,
+    xpm         smallint NOT NULL,
+    xpa         smallint NOT NULL,
+    pts         smallint NOT NULL
+);
+
+CREATE TABLE punting (
+    week        smallint NOT NULL,
+    name        varchar(256) NOT NULL, 
+    no          smallint NOT NULL,
+    yds         smallint NOT NULL,
+    avg         real NOT NULL,
+    tb          smallint NOT NULL,
+    in20        smallint NOT NULL,
+    long        smallint NOT NULL
+);

@@ -17,7 +17,7 @@ async function run(){
                 seasonData[field].forEach(function(game){
                     //let data = await scraper(game);
                     scraper(game).then((data) => {
-                        parser(data);
+                        parser(data, field.substring(4, field.length));
                     });
                     
                 })

@@ -7,26 +7,26 @@ client.connect();
 const TEAMS = require('../utils/teamEnums.js');
 
 /*CREATE TABLE passing (
+    week        smallint NOT NULL,
     name        varchar(256) NOT NULL, 
-    catt       varchar(10) NOT NULL,
+    comp        smallint NOT NULL,
+    att         smallint NOT NULL,
     yds         smallint NOT NULL,
     avg         real NOT NULL,
     td          smallint NOT NULL,
     int         smallint NOT NULL,
-    sacks       varchar(10) NOT NULL,
+    sacks       smallint NOT NULL,
+    slost       smallint NOT NULL,
     qbr         real NOT NULL,
     rtg         real NOT NULL
 );*/
 
-function parse(data){
+function parse(data, weekNum){
     let players = {};
 
-    
-    
     //console.log(data.awayStats);
-    storeGameStatsByTeam(data.awayStats);
-
-
+    storeGameStatsByTeam(data.awayStats, weekNum);
+    storeGameStatsByTeam(data.homeStats, weekNum);
 
     // client.query('SELECT * FROM passing').then((data)=>{
     //     console.log(data.rows);
@@ -41,11 +41,11 @@ function parse(data){
 
 }
 
-function storeGameStatsByTeam(gameStats){
+function storeGameStatsByTeam(gameStats, weekNum){
     gameStats.forEach(function (playType){
         if(playType.title.endsWith('Passing')){
             playType.players.forEach(function (player){
-                storePlayerData(player, playType.title);
+                storePlayerData(player, playType.title, weekNum);
             })
         }
         else{
@@ -54,57 +54,86 @@ function storeGameStatsByTeam(gameStats){
     });
 }
 
-function storePlayerData(player, statName){
+function storePlayerData(player, statName, weekNum){
     if(player.name === null || player.name === 'TEAM'){
         return;
     }
     let tableName = getStatFromTeamStat(statName)
-    let generatedStr = generateInsertQuery(player, tableName);
-    console.log(generatedStr);
-    //var generatedStr = ''.concat('INSERT INTO passing (name) VALUES (\'',player.name,'\');' );
+    let generatedStr = generateInsertQuery(player, tableName, weekNum);
     client.query(generatedStr).then((pgResponse)=>{
-        client.query('SELECT * FROM passing').then((data)=>{
-        });
+        // client.query('SELECT * FROM passing').then((data)=>{
+        // });
     });
 }
 
 /*
  * Given a scraped player object, will return INSERT query string for Postgres table
  */
-function generateInsertQuery(player, tableName){ 
+function generateInsertQuery(player, tableName, weekNum){ 
     let baseStr = 'INSERT INTO '.concat(tableName);
-    var statNames = 'name';
-    var statValues = '\''+player.name+'\'';
+    var statNames = 'week, name';
+    var statValues = weekNum + ', \''+player.name+'\'';
     player.stats.forEach(function (stat){
-        if(stat.key !== 'name'){
-            if(statNames === ''){
-                statNames = statNames.concat(removeCharFromString('-', stat.key));
-                statValues = statValues.concat(stat.value);
-            }
-            else{ 
-                statNames = statNames.concat(', ', removeCharFromString('-', stat.key));
-                statValues = statValues.concat(', ', stat.value);
-            }
+        if(stat.key !== 'name'){        //already getting name from player.name
+            let sStat = splitESPNCategory(stat.key, stat.value);
+            sStat.newKeys.forEach(function (newKey){
+                statNames = statNames.concat(', ', newKey);
+            });
+            sStat.newValues.forEach(function (newValue){
+                statValues = statValues.concat(', ',  newValue);
+            });
         }
     });
     return baseStr.concat(' (', statNames, ') VALUES (', statValues, ');');
 }
 
-function removeCharFromString(ch, str){
-    return str.replace(ch,'');
-}
-
 function getStatFromTeamStat(statTitle){
     var statString = '';
     let words = statTitle.split(' ');
-    console.log(words);
     if(words[words.length-1]==="Returns"){
-        statString = words[words.length-2].concat(' ', words[words.length-1]);
+        statString = words[words.length-2].concat(words[words.length-1]);
     }
     else{
         statString = words[words.length-1];
     }
     return statString.toLowerCase();
+}
+
+function splitESPNCategory(key,value){
+    var newKeys, newValues;
+    switch(key){
+        case 'c-att':
+            newKeys = ['comp','att'];
+            newValues = [value.split('/')[0], value.split('/')[1]];
+            break;
+        case 'sacks':
+            newKeys = ['sacks','slost'];
+            newValues = [value.split('-')[0], value.split('-')[1]];
+            break;
+        case 'qb hits':
+            newKeys = ['qbhits'];
+            newValues = [value];
+            break;
+        case 'fg':
+            newkeys = ['fgm, fga'];
+            newValues = [value.split('/')[0], value.split('/')[1]];
+            break;
+        case 'xp':
+            newkeys = ['xpm, xpa'];
+            newValues = [value.split('/')[0], value.split('/')[1]];
+            break;
+        case 'in 20':
+            newkeys = ['in20'];
+            newValues = [value];
+            break;
+        default:      
+            newKeys = [key];
+            newValues = [value];
+    }
+    return {
+        newKeys: newKeys,
+        newValues: newValues
+    };
 }
 
 //Statistic should be "Passing"
